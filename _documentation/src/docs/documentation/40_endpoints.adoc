@@ -1,0 +1,147 @@
+:imagesdir: ../images
+image::Unblu-logo.png[]
+:jbake-title: Endpoints
+
+== Endpoints
+
+The tool needs to be contacted from both SonarQube and GitLab.
+
+=== Sonar endpoints
+
+[#sonar-non-blocking]
+==== Sonar main endpoint
+
+[source, http]
+----
+POST <server url>/u-sonar-status/sonar
+----
+
+This is the principal endpoint that receives a https://docs.sonarqube.org/9.6/project-administration/webhooks/[Webhook event] sent by SonarQube.
+
+Requests are processed asynchronously, meaning that SonarQube will receive a `202 Accepted` response back immediately.
+
+Example:
+
+[source, json]
+----
+include::sonar-non-blocking-response.json[]
+----
+
+* `build_commit` and `build_timestamp` allow you to identify the `u-sonar-status` version.
+* `sonar_event_uuid` is a value used to identify the request.
+
+[#sonar-blocking]
+==== Sonar blocking endpoint
+
+A secondary endpoint where the process in done in a blocking way is available as well:
+
+[source, http]
+----
+POST <server url>/u-sonar-status/sonar-blocking
+----
+
+With this blocking endpoint you get more information about the created comment in the returned response.
+
+Example:
+
+[source, json]
+----
+include::sonar-blocking-response.json[]
+----
+
+Using this endpoint might be interesting for debugging purposes, since you see the response containing the details of the action.
+
+[#sonar-replay]
+==== Sonar replay endpoint
+
+An additional endpoint is available to trigger the process using some simplified input compared to the event sent by the Sonar Webhook mechanism.
+
+[source, http]
+----
+POST <server url>/u-sonar-status/sonar-replay
+----
+
+Body:
+
+[source, json]
+----
+include::sonar-replay.json[]
+----
+
+The response is the same as in the blocking case.
+
+Using this endpoint is interesting to trigger again the `u-sonar-status` action for a given event using `curl`, without having to send the complete webhook event body.
+
+=== GitLab endpoints
+
+[#gitlab-non-blocking]
+==== GitLab main endpoint
+
+[source, http]
+----
+POST <server url>/u-gitlab-status/gitlab
+----
+
+This is to receive the external check payload (see https://docs.gitlab.com/ee/api/status_checks.html#example-payload-sent-to-external-service[Example payload sent to external service]) sent by GitLab.
+
+Requests are processed asynchronously, meaning that GitLab will receive a `202 Accepted` response back immediately.
+
+Example:
+
+[source, json]
+----
+include::gitlab-non-blocking-response.json[]
+----
+
+* `build_commit` and `build_timestamp` allow you to identify the `u-gitlab-status` version.
+* `gitlab_event_uuid` is a value used to identify the request.
+
+[#gitlab-blocking]
+==== GitLab blocking endpoint
+
+A secondary endpoint where the process in done in a blocking way is available as well:
+
+[source, http]
+----
+POST <server url>/u-gitlab-status/gitlab-blocking
+----
+
+With this blocking endpoint you get more information about the created comment in the returned response.
+
+Example:
+
+[source, json]
+----
+include::gitlab-blocking-response.json[]
+----
+
+Using this endpoint might be interesting for debugging purposes, since you see the response containing the details of the action.
+
+[#gitlab-replay]
+==== GitLab replay endpoint
+
+An additional endpoint is available to trigger the process using some simplified input compared to the event sent by the GitLab Webhook mechanism.
+
+[source, http]
+----
+POST <server url>/u-gitlab-status/gitlab-replay
+----
+
+Body:
+
+[source, json]
+----
+include::gitlab-replay.json[]
+----
+
+The response is the same as in the blocking case.
+
+Using this endpoint is interesting to trigger again the `u-gitlab-status` action for a given event using `curl`, without having to send the complete webhook event body.
+
+=== Readiness and liveness probes
+
+The application provides standard probes:
+
+* `<server url>/q/health/live`: The application is up and running (liveness).
+* `<server url>/q/health/ready`: The application is ready to serve requests (readiness).
+* `<server url>/q/health`: Accumulating all health check procedures in the application.

@@ -1,0 +1,106 @@
+:imagesdir: ../images
+image::Unblu-logo.png[]
+:jbake-title: Setup
+
+== Setup
+
+In order to interact with a given Gitlab instance through its REST API, `u-sonar-status` needs to be authorised and authenticated. To do so, together with Gitlab's instance URL, an API token must be provided. 
+
+=== Pre-requisite
+
+The key of the project in Sonar has to be: `project_<project id>` (example `project_56`)
+
+* You can access the GitLab project with: `<gitlab server>/projects/56` (redirects you to the project page)
+* You can access the Sonar project with: `<sonar server>/dashboard?id=project_56`
+
+=== GitLab: Generate an API Token
+
+You will need a https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html[personal access token] or a https://docs.gitlab.com/ee/user/group/settings/group_access_tokens.html[group access] in order for the tool to interact with your repositories on GitLab.
+
+All the actions are done using the REST API of GitLab.
+
+You will need the `api` scope and a role allowed to post external status check.
+
+=== Sonar: Generate an API Token
+
+See documentation: https://docs.sonarqube.org/latest/user-guide/user-account/generating-and-using-tokens/[Generating and using tokens]
+
+[#application-setup]
+=== Application Setup
+
+Depending on your setup you might need to set some xref:30_configuration.adoc[configuration] properties.
+
+Minimal config entries:
+
+* xref:30_configuration.adoc#sonarqube-api-token[sonarqube.api.token]
+* xref:30_configuration.adoc#gitlab-api-token[gitlab.api.token]
+* xref:30_configuration.adoc#gitlab-external-check-url[gitlab.external.check.url]
+
+And if you are on prem GitLab and Sonar servers:
+
+* xref:30_configuration.adoc#sonarqube-host[sonarqube.host]
+* xref:30_configuration.adoc#gitlab-host[gitlab.host]
+
+[#sonarqube-webhook]
+=== SonarQube: Webhook Setup
+
+In SonarQube you need to configure a webhook https://docs.sonarqube.org/latest/project-administration/webhooks/[Webhook] pointing to the location where `u-sonar-status` is available:
+
+* Name: Any name so that you recognize that the webhook was created for the `u-sonar-status` tool.
+* URL: `<server url>/u-sonar-status/sonar` (you decide to point to the xref:40_endpoints.adoc#sonar-non-blocking[non-blocking] or xref:40_endpoints.adoc#sonar-blocking[blocking] endpoint)
+* Secret: `<any value>` if you set a value, you will need to configure xref:30_configuration.adoc#sonarqube-webhook-secret[sonarqube.webhook.secret]
+
+=== GitLab
+
+As soon as the tool receives the first Sonar webhook, it will auto register the external status check.
+
+You will see it under "Settings > Merge requests" of each project:
+
+image::status-check-settings.png[]
+
+See the GitLab doc https://docs.gitlab.com/ee/user/project/merge_requests/status_checks.html#view-the-status-checks-on-a-project[View the status checks on a project]
+
+== Dev setup
+
+The application can be started locally, check xref:50_build.adoc#local[local build] section.
+
+=== Working with remote instances
+
+If you are working locally with a remote sonarqube or gitlab instance (like https://sonarcloud.io/ or https://gitlab.com/), adding some proxy might be useful:
+
+With a tool like https://ngrok.com/[ngrok] you will get a public url (something like `https://2a01-8943-19d-e0a-8b20-645f-f7a2-c2d-9be1.ngrok.io`) that points to your localhost computer.
+
+.start ngrok (assuming `u-sonar-status` is running locally on port 8080)
+----
+ngrok http 8080
+----
+
+With a tool like https://mitmproxy.org/[mitmproxy] you can proxy the remote instance to capture the REST requests made by `u-sonar-status` to the remote instance. 
+
+For SonarQube:
+
+.start mitmproxy
+----
+mitmproxy -p 8881 --mode reverse:https://sonarcloud.io
+----
+
+And then make `u-sonar-status` use `localhost:8881` instead of `sonarcloud.io` directly:
+
+.use mitmproxy
+----
+export SONARQUBE_HOST=http://localhost:8881
+----
+
+For GitLab:
+
+.start mitmproxy
+----
+mitmproxy -p 8882 --mode reverse:https://gitlab.com
+----
+
+And then make `u-sonar-status` use `localhost:8882` instead of `gitlab.com` directly:
+
+.use mitmproxy
+----
+export GITLAB_HOST=http://localhost:8882
+----

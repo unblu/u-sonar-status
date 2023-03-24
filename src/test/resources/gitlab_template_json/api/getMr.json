@@ -1,0 +1,70 @@
+{
+    "id":1,
+    "iid":100,
+    "target_branch":"master",
+    "source_branch":"test1",
+    "project_id":56,
+    "title":"test1",
+    "state":"open",
+    "sha":"ba22a8ce46acee878adec5ffee5a5621c9d35ac1",
+    "upvotes":0,
+    "downvotes":0,
+    "created_at": "2016-12-03T17:23:34Z",
+    "updated_at": "2016-12-03T17:23:34Z",
+    "merged_at": "2016-12-03T17:23:34Z",
+    "squash_commit_sha": "37a1f246848c3dc2bb82964a183417e2e72fe1a7",
+    "merged_by": {
+        "id": 7,
+        "name": "James Bond",
+        "username": "james.bond",
+        "state": "active",
+        "avatar_url": "https://www.google.com/",
+        "web_url": "https://www.google.com/"
+    },
+    "merge_error": "Merge request is not mergeable",
+    "author":{
+        "id":1,
+        "username": "admin",
+        "email":"admin@local.host",
+        "name":"Administrator",
+        "state":"active",
+        "created_at":"2012-04-29T08:46:00Z"
+    },
+    "assignee":{
+        "id":1,
+        "username": "admin",
+        "email":"admin@local.host",
+        "name":"Administrator",
+        "state":"active",
+        "created_at":"2012-04-29T08:46:00Z"
+    },
+    "allow_collaboration": false,
+    "allow_maintainer_to_push": false,
+    "discussion_locked": false,
+    "merge_when_pipeline_succeeds": false,
+    "task_completion_status":{
+        "count":0,
+        "completed_count":0
+    },
+    "references": {
+        "short": "!100",
+        "relative": "!100",
+        "full": "my-group/my-project!100"
+    },
+    "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": "3h30m",
+        "human_total_time_spent": "0m"
+    },
+    "diff_refs": {
+        "base_sha": "c380d3acebd181f13629a25d2e2acca46ffe1e00",
+        "head_sha": "2be7ddb704c7b6b83732fdd5b9f09d5a397b5f8f",
+        "start_sha": "c380d3acebd181f13629a25d2e2acca46ffe1e00"
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "diverged_commits_count": 2,
+    "latest_build_started_at": "2018-09-07T07:27:38.472Z",
+    "latest_build_finished_at": "2018-09-07T08:07:06.012Z"
+}

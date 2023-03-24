@@ -1,0 +1,9 @@
+{
+  "sonar_event_uuid" : "sonar-c9961b21-8554-4df8-8485-1aacd05b6ac4",
+  "task_id" : "AYbMZT8ngxz2HxwOGdhr",
+  "revision" : "ba22a8ce46acee878adec5ffee5a5621c9d35ac1",
+  "project_key" : "project_56",
+  "branch_name" : "100",
+  "branch_type" : "PULL_REQUEST",
+  "quality_gate_status" : "OK"
+}

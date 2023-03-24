@@ -1,0 +1,36 @@
+{
+    "pullRequests": [
+        {
+            "key": "100",
+            "title": "test1",
+            "branch": "patch-2",
+            "base": "patch-2",
+            "status": {
+                "qualityGateStatus": "OK",
+                "bugs": 0,
+                "vulnerabilities": 0,
+                "codeSmells": 0
+            },
+            "analysisDate": "2023-03-09T17:09:43+0000",
+            "url": "http://localhost:3001/my-group/my-project/-/merge_requests/100",
+            "target": "master",
+            "commit": {
+                "sha": "ba22a8ce46acee878adec5ffee5a5621c9d35ac1",
+                "author": {
+                    "name": "John Smith",
+                    "login": "jsmith@example.com",
+                    "avatar": "7c4c4a651df3a1d3d249b7121c28ab97"
+                },
+                "date": "2023-03-15T13:54:48+0100",
+                "message": "A commit message"
+            },
+            "contributors": [
+                {
+                    "name": "John Smith",
+                    "login": "jsmith@example.com",
+                    "avatar": "7c4c4a3d249b712651df3a1d1c28ab97"
+                }
+            ]
+        }
+    ]
+}

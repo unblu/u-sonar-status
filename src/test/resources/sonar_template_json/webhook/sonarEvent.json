@@ -1,0 +1,62 @@
+{
+  "serverUrl" : "https://sonar.example.com",
+  "taskId" : "AYbMZT8ngxz2HxwOGdhr",
+  "status" : "SUCCESS",
+  "analysedAt" : "2023-03-10T16:40:28+0000",
+  "revision" : "ba22a8ce46acee878adec5ffee5a5621c9d35ac1",
+  "changedAt" : "2023-03-10T16:40:28+0000",
+  "project" : {
+    "key" : "project_56",
+    "name" : "a_project (scanned by Jenkins)",
+    "url" : "https://sonar.example.com/dashboard?id=project_56"
+  },
+  "branch" : {
+    "name" : "100",
+    "type" : "PULL_REQUEST",
+    "isMain" : false,
+    "url" : "https://sonar.example.com/dashboard?id=project_56&pullRequest=100"
+  },
+  "qualityGate" : {
+    "name" : "Test Gate",
+    "status" : "OK",
+    "conditions" : [ {
+      "metric" : "new_reliability_rating",
+      "operator" : "GREATER_THAN",
+      "value" : "1",
+      "status" : "OK",
+      "errorThreshold" : "1"
+    }, {
+      "metric" : "new_security_rating",
+      "operator" : "GREATER_THAN",
+      "value" : "1",
+      "status" : "OK",
+      "errorThreshold" : "1"
+    }, {
+      "metric" : "new_maintainability_rating",
+      "operator" : "GREATER_THAN",
+      "value" : "1",
+      "status" : "OK",
+      "errorThreshold" : "1"
+    }, {
+      "metric" : "new_duplicated_lines_density",
+      "operator" : "GREATER_THAN",
+      "value" : "0.0",
+      "status" : "OK",
+      "errorThreshold" : "3"
+    }, {
+      "metric" : "new_security_hotspots_reviewed",
+      "operator" : "LESS_THAN",
+      "status" : "NO_VALUE",
+      "errorThreshold" : "100"
+    }, {
+      "metric" : "new_security_review_rating",
+      "operator" : "GREATER_THAN",
+      "value" : "1",
+      "status" : "OK",
+      "errorThreshold" : "1"
+    } ]
+  },
+  "properties" : {
+    "sonar.analysis.detectedscm" : "git"
+  }
+}

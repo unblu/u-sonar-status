@@ -1,0 +1,7 @@
+{
+    "id": 3,
+    "name": "SONAR",
+    "project_id": 56,
+    "external_url": "https://company.example.com/u-sonar-status/gitlab",
+    "protected_branches": []
+}

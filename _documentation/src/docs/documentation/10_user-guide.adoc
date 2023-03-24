@@ -1,0 +1,18 @@
+:imagesdir: ../images
+image::Unblu-logo.png[]
+:jbake-title: User Guide
+
+== User guide
+
+`u-sonar-status` is a bot to report a SonarQube (or SonarCloud) "Pull Request https://docs.sonarqube.org/latest/user-guide/quality-gates/#quality-gate-status[Quality Gate Status]" as "https://docs.gitlab.com/ee/user/project/merge_requests/status_checks.html[External Status Check]" on Merge Requests in GitLab Ultimate.
+
+On a MR where the tool is configured, you will see next to the comment posted by sonar, the quality gate reported as external status:
+
+image::mr-overview.png[]
+
+If your project is configured to not allow you to merge when external checks are failing, you will ensure that the quality gate has to be green before you merge.
+
+The recommended approach (see the https://docs.sonarqube.org/9.9/devops-platform-integration/gitlab-integration/[GitLab integration] integration page) is to fail a CI pipeline in case of a "Failed" quality gate.
+But this requires to re-run this pipeline when the status has changed in Sonar (for example when some findings are marked as false positives).
+
+With this tool the external status check in Gitlab and the Quality Gate status in Sonar are always in sync.

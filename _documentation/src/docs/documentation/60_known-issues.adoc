@@ -1,0 +1,18 @@
+:imagesdir: ../images
+:diagramsdir: ../diagrams
+image::Unblu-logo.png[]
+:jbake-title: Known issues
+
+== Known issues
+
+=== Retry button is not working in GitLab
+
+When an on prem sonar server is user (instead of sonarcloud.io), the endpoint `api/project_pull_requests/list` that is queried does not contains the commit information.
+
+In the u-sonar-satus tool you will see following log entry:
+
+----
+Skipping event because head of merge request '100' in project '56' is 'ba22a8ce46acee878adec5ffee5a5621c9d35ac1' and does not match the revision in Sonar 'null'
+----
+
+https://community.sonarsource.com/t/get-api-project-pull-requests-list-response-does-not-contain-commit-sha/30075[related discussion on the sonarsource forum]
