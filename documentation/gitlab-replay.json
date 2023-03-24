@@ -1,0 +1,10 @@
+{
+  "project_id" : 56,
+  "merge_request_iid" : 100,
+  "merge_request_source_branch" : "patch-2",
+  "merge_request_last_commit_sha" : "ba22a8ce46acee878adec5ffee5a5621c9d35ac1",
+  "external_status_check_id" : 3,
+  "external_status_check_name" : "SONAR",
+  "external_status_check_url" : "https://company.example.com/u-sonar-status/gitlab",
+  "gitlab_event_uuid" : "gitlab-c289ee78-ab41-4656-ad7a-3d8ea464fb25"
+}

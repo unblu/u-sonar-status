@@ -1,0 +1,11 @@
+{
+  "build_commit" : "6af21ad",
+  "build_timestamp" : "2022-01-01T07:21:58.378413Z",
+  "sonar_event_uuid" : "sonar-c9961b21-8554-4df8-8485-1aacd05b6ac4",
+  "sonar_task_id" : "AYbMZT8ngxz2HxwOGdhr",
+  "source" : "SONAR",
+  "gitlab_project_id" : 56,
+  "gitlab_merge_request_iid" : 19,
+  "gitlab_external_status_check_id" : 3,
+  "gitlab_external_status_check_status_id" : 4
+}
