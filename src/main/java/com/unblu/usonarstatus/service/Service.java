@@ -47,6 +47,9 @@ public class Service {
 	@ConfigProperty(name = "gitlab.external.check.name", defaultValue = "SONAR")
 	String externalStatusCheckName;
 
+	@ConfigProperty(name = "branch.bypass", defaultValue = "^mr(\\d+)_.+")
+	String bypassBranchPattern;
+
 	@ConfigProperty(name = "gitlab.host", defaultValue = "https://gitlab.com")
 	String gitLabHost;
 
@@ -88,29 +91,33 @@ public class Service {
 		USonarStatusResult result = createResult(gitlabEventUUID, null, Source.GITLAB);
 
 		if (Objects.equals(event.getExternalStatusCheckName(), externalStatusCheckName)) {
-			String projectKey = PROJECT_PREFIX + event.getProjectId();
-			String pullRequestKey = "" + event.getMergeRequestIid();
-			PullRequestsResponse response = sonarClient.listPullRequests(projectKey);
-			Optional<PullRequest> findPullRequest = findPullRequest(response, pullRequestKey);
-			if (findPullRequest.isPresent()) {
-				PullRequest pr = findPullRequest.get();
-				LOG.infof("GitlabEvent: '%s' | Found Sonar pull request %s",
-						event.getGitlabEventUUID(), pr);
-				Param p = new Param();
-				p.logPrefix = "GitlabEvent: '" + event.getGitlabEventUUID() + "'";
-				p.gitLabProjectId = event.getProjectId();
-				p.gitLabMergeRequestIid = event.getMergeRequestIid();
-				p.gitLabMergeRequestSha = event.getMergeRequestLastCommitSha();
-				if (pr.getStatus() != null) {
-					p.sonarQualityGateStatus = pr.getStatus().getQualityGateStatus();
-				}
-				if (pr.getCommit() != null) {
-					p.sonarRevision = pr.getCommit().getSha();
-				}
-				setExternalCheckStatusIfPossible(result, p);
+			Param p = new Param();
+			p.logPrefix = "GitlabEvent: '" + event.getGitlabEventUUID() + "'";
+			p.gitLabProjectId = event.getProjectId();
+			p.gitLabMergeRequestIid = event.getMergeRequestIid();
+			p.gitLabMergeRequestSha = event.getMergeRequestLastCommitSha();
+			if (event.getMergeRequestSourceBranch().matches(bypassBranchPattern)) {
+				setExternalCheckStatus(result, p, Status.PASSED);
 			} else {
-				LOG.infof("GitlabEvent: '%s' | Skipping event because could not retrieve the status in Sonar for projectKey '%s' and pullRequest '%s'",
-						event.getGitlabEventUUID(), projectKey, pullRequestKey);
+				String projectKey = PROJECT_PREFIX + event.getProjectId();
+				String pullRequestKey = "" + event.getMergeRequestIid();
+				PullRequestsResponse response = sonarClient.listPullRequests(projectKey);
+				Optional<PullRequest> findPullRequest = findPullRequest(response, pullRequestKey);
+				if (findPullRequest.isPresent()) {
+					PullRequest pr = findPullRequest.get();
+					LOG.infof("GitlabEvent: '%s' | Found Sonar pull request %s",
+							event.getGitlabEventUUID(), pr);
+					if (pr.getStatus() != null) {
+						p.sonarQualityGateStatus = pr.getStatus().getQualityGateStatus();
+					}
+					if (pr.getCommit() != null) {
+						p.sonarRevision = pr.getCommit().getSha();
+					}
+					setExternalCheckStatusIfPossible(result, p);
+				} else {
+					LOG.infof("GitlabEvent: '%s' | Skipping event because could not retrieve the status in Sonar for projectKey '%s' and pullRequest '%s'",
+							event.getGitlabEventUUID(), projectKey, pullRequestKey);
+				}
 			}
 		} else {
 			LOG.warnf("GitlabEvent: '%s' | Skipping event because unexpected external status check name '%s'",
@@ -164,17 +171,8 @@ public class Service {
 		String revision = param.sonarRevision;
 		if (Objects.equals(param.gitLabMergeRequestSha, revision)) {
 			Status gitLabExternalCheckStatus = toGitLabExternalCheckStatus(param.sonarQualityGateStatus);
-			result.setGitlabExternalStatusCheckStatus(gitLabExternalCheckStatus);
 			if (gitLabExternalCheckStatus != null) {
-
-				Long externalStatusCheckId = getOrCreateGitLabExternalCheckId(result, param);
-				result.setGitlabExternalStatusCheckId(externalStatusCheckId);
-				if (externalStatusCheckId != null) {
-					ExternalStatusCheckResult response = setGitLabExternalCheck(param, result, param.gitLabProjectId, param.gitLabMergeRequestIid, revision, gitLabExternalCheckStatus, externalStatusCheckId);
-					if (response != null) {
-						mapFromResponse(result, response);
-					}
-				}
+				setExternalCheckStatus(result, param, gitLabExternalCheckStatus);
 			} else {
 				LOG.warnf("%s | Skipping event because of unexpected quality gate status: '%s'",
 						param.logPrefix, param.sonarQualityGateStatus);
@@ -182,6 +180,18 @@ public class Service {
 		} else {
 			LOG.infof("%s | Skipping event because head of merge request '%s' in project '%s' is '%s' and does not match the revision in Sonar '%s'",
 					param.logPrefix, param.gitLabMergeRequestIid, param.gitLabProjectId, param.gitLabMergeRequestSha, revision);
+		}
+	}
+
+	private void setExternalCheckStatus(USonarStatusResult result, Param param, Status gitLabExternalCheckStatus) {
+		result.setGitlabExternalStatusCheckStatus(gitLabExternalCheckStatus);
+		Long externalStatusCheckId = getOrCreateGitLabExternalCheckId(result, param);
+		result.setGitlabExternalStatusCheckId(externalStatusCheckId);
+		if (externalStatusCheckId != null) {
+			ExternalStatusCheckResult response = setGitLabExternalCheck(param, result, param.gitLabProjectId, param.gitLabMergeRequestIid, param.gitLabMergeRequestSha, gitLabExternalCheckStatus, externalStatusCheckId);
+			if (response != null) {
+				mapFromResponse(result, response);
+			}
 		}
 	}
 

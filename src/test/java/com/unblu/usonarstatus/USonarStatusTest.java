@@ -357,6 +357,35 @@ class USonarStatusTest {
 	}
 
 	@Test
+	void testGitLabBypassCase() throws Exception {
+		wireMockHelper.setupDefaultStubsCommon();
+		GitLabEventSimple simpleGitLabEvent = MockUtil.createDefaultGitLabEventSimple();
+		simpleGitLabEvent.setMergeRequestSourceBranch("mr123_release/6.x.x");
+
+		given().when()
+				.header("Content-Type", "application/json")
+				.body(simpleGitLabEvent)
+				.post("/u-sonar-status/gitlab-replay")
+				.then()
+				.statusCode(Response.Status.OK.getStatusCode())
+				.body(startsWith("{\n"))
+				.body(endsWith("\n}"))
+				.body("build_commit", equalTo("6af21ad"))
+				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("source", equalTo("GITLAB"))
+				.body("sonar_event_uuid", nullValue())
+				.body("gitlab_event_uuid", notNullValue())
+				.body("gitlab_project_id", equalTo(56))
+				.body("gitlab_merge_request_iid", equalTo(19))
+				.body("gitlab_external_status_check_id", equalTo(3))
+				.body("gitlab_external_status_check_status", equalTo("passed"))
+				.body("gitlab_external_status_check_status_id", equalTo(4))
+				.body("error", nullValue());
+
+		wireMockHelper.verifyRequests(2);
+	}
+
+	@Test
 	void testGitlabEndpointRapidReturnMalformedRequest() throws Exception {
 		String json = """
 				{
