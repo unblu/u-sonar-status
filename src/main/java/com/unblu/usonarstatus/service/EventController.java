@@ -61,9 +61,6 @@ public class EventController {
 	public USonarStatusResult handleSonarEventBlocking(@Header("x-sonar-webhook-hmac-sha256") String hmacValue, @Body SonarEvent sonarEvent, RoutingContext rc) {
 		String sonarEventUUID = createSonarUUID();
 		Log.infof("SonarEvent: '%s' | Received (blocking) hmac: '%s'", sonarEventUUID, hmacValue);
-		System.out.println("XXXX");
-		System.out.println(rc.body().asString());
-		System.out.println("XXXX");
 		if (isSonarHmacValid(hmacValue, rc.body().buffer().getBytes(), sonarEventUUID)) {
 			SonarEventSimple simpleEvent = JsonUtils.toSonarEventSimple(sonarEvent, sonarEventUUID);
 			return service.handleSonarEvent(simpleEvent);

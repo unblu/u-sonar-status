@@ -297,7 +297,7 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", nullValue())
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(3);
+		wireMockHelper.verifyRequests(2);
 	}
 
 	@Test
@@ -325,7 +325,7 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", equalTo(4))
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(3);
+		wireMockHelper.verifyRequests(2);
 	}
 
 	@Test
@@ -353,7 +353,7 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", equalTo(4))
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(3);
+		wireMockHelper.verifyRequests(2);
 	}
 
 	@Test
