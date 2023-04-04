@@ -47,8 +47,8 @@ public class Service {
 	@ConfigProperty(name = "gitlab.external.check.name", defaultValue = "SONAR")
 	String externalStatusCheckName;
 
-	@ConfigProperty(name = "branch.bypass", defaultValue = "^mr(\\d+)_.+")
-	String bypassBranchPattern;
+	@ConfigProperty(name = "branch.bypass")
+	Optional<String> bypassBranchPattern;
 
 	@ConfigProperty(name = "gitlab.host", defaultValue = "https://gitlab.com")
 	String gitLabHost;
@@ -97,7 +97,9 @@ public class Service {
 			p.gitLabMergeRequestIid = event.getMergeRequestIid();
 			p.gitLabMergeRequestSha = event.getMergeRequestLastCommitSha();
 			p.gitLabExternalStatusCheckId = event.getExternalStatusCheckId();
-			if (event.getMergeRequestSourceBranch().matches(bypassBranchPattern)) {
+
+			if (bypassBranchPattern.isPresent()
+					&& event.getMergeRequestSourceBranch().matches(bypassBranchPattern.get())) {
 				setExternalCheckStatus(result, p, Status.PASSED);
 			} else {
 				String projectKey = PROJECT_PREFIX + event.getProjectId();
