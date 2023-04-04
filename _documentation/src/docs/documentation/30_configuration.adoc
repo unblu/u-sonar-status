@@ -14,6 +14,7 @@ gitlab.external.check.url=https://company.example.com/u-sonar-status/gitlab
 gitlab.external.check.name=SONAR
 sonarqube.host=https://sonarcloud.io/
 sonarqube.api.token=3bd9fdc773d5a6df3d2a12f8c35ae2b3e13b8944
+branch.bypass=^mr(\\d+)_.+
 ----
 
 You can use any of the https://quarkus.io/guides/config-reference#configuration-sources[Configuration Sources supported by Quarkus] to set the values.
@@ -85,3 +86,11 @@ Specify the name of the check in Gitlab.
 
 * key: `gitlab.external.check.name`
 * default value: `SONAR`
+
+[#branch-bypass]
+=== Quality Gate Bypass - branch pattern
+
+Specify the regex pattern of branches where the Quality Gate must be bypassed. If the source branch name matches the given pattern, Gitlab's external status check is automatically set to green, without the need to query Sonar.
+
+* key: `branch.bypass`
+* No default value

@@ -36,6 +36,10 @@ Minimal config entries:
 * xref:30_configuration.adoc#gitlab-api-token[gitlab.api.token]
 * xref:30_configuration.adoc#gitlab-external-check-url[gitlab.external.check.url]
 
+Optional config entries:
+
+* xref:30_configuration.adoc#branch-bypass[branch.bypass]
+
 And if you are on prem GitLab and Sonar servers:
 
 * xref:30_configuration.adoc#sonarqube-host[sonarqube.host]
