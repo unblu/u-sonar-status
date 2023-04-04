@@ -252,6 +252,7 @@
 <li><a href="#gitlab-api-token">GitLab API token</a></li>
 <li><a href="#gitlab-external-check-url">GitLab External Check URL</a></li>
 <li><a href="#gitlab-external-check-name">GitLab External Check name</a></li>
+<li><a href="#branch-bypass">Quality Gate Bypass - branch pattern</a></li>
 </ul>
 </li>
 </ul>
@@ -294,7 +295,8 @@ gitlab.api.token=glpat-rXzx1n17cqUnmo437XSf
 gitlab.external.check.url=https://company.example.com/u-sonar-status/gitlab
 gitlab.external.check.name=SONAR
 sonarqube.host=https://sonarcloud.io/
-sonarqube.api.token=3bd9fdc773d5a6df3d2a12f8c35ae2b3e13b8944</pre>
+sonarqube.api.token=3bd9fdc773d5a6df3d2a12f8c35ae2b3e13b8944
+branch.bypass=^mr(\\d+)_.+</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -430,6 +432,22 @@ So it points to the <a href="40_endpoints.html#gitlab-non-blocking">non-blocking
 </li>
 <li>
 <p>default value: <code>SONAR</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="branch-bypass">Quality Gate Bypass - branch pattern</h3>
+<div class="paragraph">
+<p>Specify the regex pattern of branches where the Quality Gate must be bypassed. If the source branch name matches the given pattern, Gitlab&#8217;s external status check is automatically set to green, without the need to query Sonar.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>key: <code>branch.bypass</code></p>
+</li>
+<li>
+<p>No default value</p>
 </li>
 </ul>
 </div>

@@ -12,17 +12,17 @@
     </url>
 
     <url>
-    	<loc>http://jbake.org/documentation/10_user-guide.html</loc>
-    	<lastmod>2023-04-04</lastmod>
-    </url>
-
-    <url>
     	<loc>http://jbake.org/documentation/60_known-issues.html</loc>
     	<lastmod>2023-04-04</lastmod>
     </url>
 
     <url>
     	<loc>http://jbake.org/documentation/30_configuration.html</loc>
+    	<lastmod>2023-04-04</lastmod>
+    </url>
+
+    <url>
+    	<loc>http://jbake.org/documentation/10_user-guide.html</loc>
     	<lastmod>2023-04-04</lastmod>
     </url>
 
