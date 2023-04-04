@@ -297,7 +297,7 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", nullValue())
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(3);
+		wireMockHelper.verifyRequests(2);
 	}
 
 	@Test
@@ -325,7 +325,7 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", equalTo(4))
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(3);
+		wireMockHelper.verifyRequests(2);
 	}
 
 	@Test
@@ -353,12 +353,12 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", equalTo(4))
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(3);
+		wireMockHelper.verifyRequests(2);
 	}
 
 	@Test
 	void testGitLabBypassCase() throws Exception {
-		wireMockHelper.setupDefaultStubsCommon();
+		wireMockHelper.setupSetStatusOfExternalStatusCheck();
 		GitLabEventSimple simpleGitLabEvent = MockUtil.createDefaultGitLabEventSimple();
 		simpleGitLabEvent.setMergeRequestSourceBranch("mr123_release/6.x.x");
 
@@ -382,7 +382,7 @@ class USonarStatusTest {
 				.body("gitlab_external_status_check_status_id", equalTo(4))
 				.body("error", nullValue());
 
-		wireMockHelper.verifyRequests(2);
+		wireMockHelper.verifyRequests(1);
 	}
 
 	@Test

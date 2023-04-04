@@ -60,16 +60,12 @@ public class WireMockHelper {
 
 	public void setupDefaultStubsForSonar() {
 		setupGetMr();
-		setupDefaultStubsCommon();
+		setupGetExternalStatusChecks();
+		setupSetStatusOfExternalStatusCheck();
 	}
 
 	public void setupDefaultStubsForGitLab() {
 		setupGetSonarPullRequests();
-		setupDefaultStubsCommon();
-	}
-
-	public void setupDefaultStubsCommon() {
-		setupGetExternalStatusChecks();
 		setupSetStatusOfExternalStatusCheck();
 	}
 

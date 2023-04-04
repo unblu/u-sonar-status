@@ -96,6 +96,7 @@ public class Service {
 			p.gitLabProjectId = event.getProjectId();
 			p.gitLabMergeRequestIid = event.getMergeRequestIid();
 			p.gitLabMergeRequestSha = event.getMergeRequestLastCommitSha();
+			p.gitLabExternalStatusCheckId = event.getExternalStatusCheckId();
 			if (event.getMergeRequestSourceBranch().matches(bypassBranchPattern)) {
 				setExternalCheckStatus(result, p, Status.PASSED);
 			} else {
@@ -201,7 +202,7 @@ public class Service {
 		public Long gitLabProjectId;
 		public Long gitLabMergeRequestIid;
 		public String gitLabMergeRequestSha;
-		//XXX add   "external_approval_rule":
+		public Long gitLabExternalStatusCheckId;
 
 		public String sonarQualityGateStatus;
 		public String sonarRevision;
@@ -284,7 +285,9 @@ public class Service {
 	}
 
 	private Long getOrCreateGitLabExternalCheckId(USonarStatusResult result, Param param) {
-		//XXX add   "external_approval_rule":
+		if (param.gitLabExternalStatusCheckId != null) {
+			return param.gitLabExternalStatusCheckId;
+		}
 		List<ExternalStatusCheck> checks;
 		try {
 			checks = gitlab.getExternalStatusCheckApi().getExternalStatusChecks(param.gitLabProjectId);

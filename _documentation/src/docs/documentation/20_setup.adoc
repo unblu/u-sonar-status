@@ -19,7 +19,7 @@ You will need a https://docs.gitlab.com/ee/user/profile/personal_access_tokens.h
 
 All the actions are done using the REST API of GitLab.
 
-You will need the `api` scope and a role allowed to post external status check.
+You will need the `api` scope and a role allowed to post external status check (probably `Maintainer`).
 
 === Sonar: Generate an API Token
 
