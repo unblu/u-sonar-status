@@ -29,6 +29,7 @@ dependencies {
 }
 
 group 'com.unblu.usonarstatus'
+version 'rev_' + grgit.head().abbreviatedId
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
