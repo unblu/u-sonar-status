@@ -27,6 +27,8 @@ import com.unblu.usonarstatus.sonar.PullRequest;
 import com.unblu.usonarstatus.sonar.PullRequestsResponse;
 import com.unblu.usonarstatus.sonar.SonarClient;
 
+import io.quarkus.info.BuildInfo;
+import io.quarkus.info.GitInfo;
 import io.quarkus.vertx.ConsumeEvent;
 import io.smallrye.common.annotation.Blocking;
 import io.vertx.mutiny.core.eventbus.EventBus;
@@ -62,11 +64,11 @@ public class Service {
 	@ConfigProperty(name = "sonarqube.host", defaultValue = "https://sonarcloud.io")
 	String sonarHost;
 
-	@ConfigProperty(name = "build.commit", defaultValue = "n/a")
-	String buildCommit;
+	@Inject
+	GitInfo gitInfo;
 
-	@ConfigProperty(name = "build.timestamp", defaultValue = "n/a")
-	String buildTimestamp;
+	@Inject
+	BuildInfo buildInfo;
 
 	private GitLabApi gitlab;
 
@@ -334,8 +336,8 @@ public class Service {
 		result.setGitlabEventUUID(gitlabEventUUID);
 		result.setSonarEventUUID(sonarEventUUID);
 		result.setSource(source);
-		result.setBuildCommit(buildCommit);
-		result.setBuildTimestamp(buildTimestamp);
+		result.setBuildCommit(gitInfo.latestCommitId().substring(7));
+		result.setBuildTimestamp(buildInfo.time().toString());
 		return result;
 	}
 }

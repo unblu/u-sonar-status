@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.startsWith;
 
 import java.io.IOException;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -22,6 +23,8 @@ import com.unblu.usonarstatus.util.MockUtil;
 import com.unblu.usonarstatus.util.MockUtil.JsonStub;
 import com.unblu.usonarstatus.util.WireMockHelper;
 
+import io.quarkus.info.BuildInfo;
+import io.quarkus.info.GitInfo;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -42,6 +45,12 @@ class USonarStatusTest {
 
 	@ConfigProperty(name = "sonarqube.api.token")
 	String sonarApiToken;
+
+	@Inject
+	GitInfo gitInfo;
+
+	@Inject
+	BuildInfo buildInfo;
 
 	private WireMockHelper wireMockHelper;
 
@@ -65,8 +74,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.ACCEPTED.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -94,8 +103,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -122,8 +131,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -154,8 +163,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -185,8 +194,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.ACCEPTED.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("error", startsWith("Failed to decode:Unexpected character ('\"' (code 34)): was expecting comma to separate Object entries"));
 
 		wireMockHelper.verifyRequests(0);
@@ -204,8 +213,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -230,8 +239,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -257,8 +266,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("SONAR"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", notNullValue())
@@ -285,8 +294,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.ACCEPTED.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("GITLAB"))
 				.body("sonar_event_uuid", nullValue())
 				.body("gitlab_event_uuid", notNullValue())
@@ -313,8 +322,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("GITLAB"))
 				.body("sonar_event_uuid", nullValue())
 				.body("gitlab_event_uuid", notNullValue())
@@ -341,8 +350,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("GITLAB"))
 				.body("sonar_event_uuid", nullValue())
 				.body("gitlab_event_uuid", notNullValue())
@@ -370,8 +379,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.OK.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("source", equalTo("GITLAB"))
 				.body("sonar_event_uuid", nullValue())
 				.body("gitlab_event_uuid", notNullValue())
@@ -401,8 +410,8 @@ class USonarStatusTest {
 				.statusCode(Response.Status.ACCEPTED.getStatusCode())
 				.body(startsWith("{\n"))
 				.body(endsWith("\n}"))
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("error", startsWith("Failed to decode:Unexpected character ('\"' (code 34)): was expecting comma to separate Object entries"));
 
 		wireMockHelper.verifyRequests(0);
@@ -426,8 +435,8 @@ class USonarStatusTest {
 				.body(endsWith("\n}"))
 				.body("gitlab_event_uuid", nullValue())
 				.body("sonar_event_uuid", nullValue())
-				.body("build_commit", equalTo("6af21ad"))
-				.body("build_timestamp", equalTo("2022-01-01T07:21:58.378413Z"))
+				.body("build_commit", equalTo(expectedBuildCommitValue()))
+				.body("build_timestamp", equalTo(expectedBuildTimestampValue()))
 				.body("error", equalTo("Invalid path: /foo"));
 
 		wireMockHelper.verifyRequests(0);
@@ -465,5 +474,13 @@ class USonarStatusTest {
 				.body("error", nullValue());
 
 		wireMockHelper.verifyRequests(0);
+	}
+
+	private String expectedBuildCommitValue() {
+		return gitInfo.latestCommitId().substring(7);
+	}
+
+	private String expectedBuildTimestampValue() {
+		return buildInfo.time().toString();
 	}
 }
