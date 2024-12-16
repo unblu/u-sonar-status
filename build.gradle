@@ -21,7 +21,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-container-image-jib'
     implementation 'io.quarkus:quarkus-arc'
     implementation 'eu.mulk.quarkus-googlecloud-jsonlogging:quarkus-googlecloud-jsonlogging:6.0.0'
-    implementation 'org.gitlab4j:gitlab4j-api:5.1.0'
+    implementation 'org.gitlab4j:gitlab4j-api:6.0.0-rc.7'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.assertj:assertj-core:3.24.2'
@@ -51,7 +51,7 @@ test {
 
 spotless {
   java {
-    importOrder 'java', 'javax', 'org', 'com', ''
+    importOrder 'java', 'javax', 'jakarta', 'org', 'com', ''
     removeUnusedImports()
 
     // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_jdt_formatter
@@ -73,8 +73,11 @@ quarkus.container-image.tag=latest
 build.commit=${grgit.head().abbreviatedId}
 build.timestamp=${java.time.Instant.now().toString()}
 
-quarkus.index-dependency.gitlab4j.group-id=org.gitlab4j
-quarkus.index-dependency.gitlab4j.artifact-id=gitlab4j-api
+quarkus.index-dependency.gitlab4j-api.group-id=org.gitlab4j
+quarkus.index-dependency.gitlab4j-api.artifact-id=gitlab4j-api
+
+quarkus.index-dependency.gitlab4j-models.group-id=org.gitlab4j
+quarkus.index-dependency.gitlab4j-models.artifact-id=gitlab4j-models
 
 %dev.quarkus.log.console.google=false
 %test.quarkus.log.console.google=false
