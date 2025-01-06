@@ -22,7 +22,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-container-image-jib'
     implementation 'io.quarkus:quarkus-arc'
     implementation 'eu.mulk.quarkus-googlecloud-jsonlogging:quarkus-googlecloud-jsonlogging:6.0.0'
-    implementation 'org.gitlab4j:gitlab4j-api:6.0.0-rc.7'
+    implementation 'org.gitlab4j:gitlab4j-api:6.0.0-rc.8'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.assertj:assertj-core:3.24.2'
