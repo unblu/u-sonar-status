@@ -64,6 +64,12 @@ public class Service {
 	@ConfigProperty(name = "sonarqube.host", defaultValue = "https://sonarcloud.io")
 	String sonarHost;
 
+	@ConfigProperty(name = "report.mode.approval", defaultValue = "true")
+	boolean reportModeApproval;
+
+	@ConfigProperty(name = "report.mode.approver.name", defaultValue = "u-sonar-status")
+	String reportModeApproverName;
+
 	@Inject
 	GitInfo gitInfo;
 
@@ -164,12 +170,32 @@ public class Service {
 				p.gitLabMergeRequestSha = mr.getSha();
 				p.sonarQualityGateStatus = event.getQualityGateStatus();
 				p.sonarRevision = event.getRevision();
-				setExternalCheckStatusIfPossible(result, p);
+				if (reportModeApproval) {
+					setMrApprovalIfPossible(event, result, p);
+				} else {
+					setExternalCheckStatusIfPossible(result, p);
+				}
 			}
 		}
 		LOG.infof("SonarEvent: '%s', taskId '%s' | Finished handling Sonar event with result %s",
 				event.getSonarEventUUID(), event.getTaskId(), result);
 		return result;
+	}
+
+	private void setMrApprovalIfPossible(SonarEventSimple event, USonarStatusResult result, Param param) {
+		String revision = param.sonarRevision;
+		if (Objects.equals(param.gitLabMergeRequestSha, revision)) {
+			Status status = toGitLabExternalCheckStatus(param.sonarQualityGateStatus);
+			if (status != null) {
+				setMrApproval(event, result, param, status);
+			} else {
+				LOG.warnf("%s | Skipping event because of unexpected quality gate status: '%s'",
+						param.logPrefix, param.sonarQualityGateStatus);
+			}
+		} else {
+			LOG.infof("%s | Skipping event because head of merge request '%s' in project '%s' is '%s' and does not match the revision in Sonar '%s'",
+					param.logPrefix, param.gitLabMergeRequestIid, param.gitLabProjectId, param.gitLabMergeRequestSha, revision);
+		}
 	}
 
 	private void setExternalCheckStatusIfPossible(USonarStatusResult result, Param param) {
@@ -197,6 +223,26 @@ public class Service {
 			if (response != null) {
 				mapFromResponse(result, response);
 			}
+		}
+	}
+
+	private void setMrApproval(SonarEventSimple event, USonarStatusResult result, Param param, Status approveStatus) {
+		MergeRequest mrWithApprovals = getMrApprovals(event, result, param.gitLabProjectId, param.gitLabMergeRequestIid);
+		if (mrWithApprovals == null) {
+			return;
+		}
+
+		MergeRequest mergeRequest = null;
+		boolean approved = mrWithApprovals.getApprovedBy().stream().anyMatch(user -> user.getName().contentEquals(reportModeApproverName));
+		if (approveStatus == Status.PASSED && !approved) {
+			mergeRequest = approveMr(event, result, param.gitLabProjectId, param.gitLabMergeRequestIid);
+		} else if (approveStatus == Status.FAILED && approved) {
+			mergeRequest = unapproveMr(event, result, param.gitLabProjectId, param.gitLabMergeRequestIid);
+		}
+
+		if (mergeRequest != null) {
+			result.setGitlabMergeRequestIid(mergeRequest.getIid());
+			result.setGitlabProjectId(mergeRequest.getProjectId());
 		}
 	}
 
@@ -271,6 +317,39 @@ public class Service {
 			return gitlab.getMergeRequestApi().getMergeRequest(gitLabProjectId, gitLabMergeRequestIid);
 		} catch (GitLabApiException e) {
 			LOG.warnf(e, "SonarEvent: '%s', taskId '%s' | Can not get Merge Request '%d' in GitLab project '%d'",
+					event.getSonarEventUUID(), event.getTaskId(), gitLabMergeRequestIid, gitLabProjectId);
+			result.setError(e.getMessage());
+		}
+		return null;
+	}
+
+	private MergeRequest approveMr(SonarEventSimple event, USonarStatusResult result, Long gitLabProjectId, Long gitLabMergeRequestIid) {
+		try {
+			return gitlab.getMergeRequestApi().approveMergeRequest(gitLabProjectId, gitLabMergeRequestIid, null);
+		} catch (GitLabApiException e) {
+			LOG.warnf(e, "SonarEvent: '%s', taskId '%s' | Cannot approve Merge Request '%d' in GitLab project '%d'",
+					event.getSonarEventUUID(), event.getTaskId(), gitLabMergeRequestIid, gitLabProjectId);
+			result.setError(e.getMessage());
+		}
+		return null;
+	}
+
+	private MergeRequest unapproveMr(SonarEventSimple event, USonarStatusResult result, Long gitLabProjectId, Long gitLabMergeRequestIid) {
+		try {
+			return gitlab.getMergeRequestApi().unapproveMergeRequest(gitLabProjectId, gitLabMergeRequestIid);
+		} catch (GitLabApiException e) {
+			LOG.warnf(e, "SonarEvent: '%s', taskId '%s' | Cannot unapprove Merge Request '%d' in GitLab project '%d'",
+					event.getSonarEventUUID(), event.getTaskId(), gitLabMergeRequestIid, gitLabProjectId);
+			result.setError(e.getMessage());
+		}
+		return null;
+	}
+
+	private MergeRequest getMrApprovals(SonarEventSimple event, USonarStatusResult result, Long gitLabProjectId, Long gitLabMergeRequestIid) {
+		try {
+			return gitlab.getMergeRequestApi().getMergeRequestApprovals(gitLabProjectId, gitLabMergeRequestIid);
+		} catch (GitLabApiException e) {
+			LOG.warnf(e, "SonarEvent: '%s', taskId '%s' | Cannot get approvals info for Merge Request '%d' in GitLab project '%d'",
 					event.getSonarEventUUID(), event.getTaskId(), gitLabMergeRequestIid, gitLabProjectId);
 			result.setError(e.getMessage());
 		}
