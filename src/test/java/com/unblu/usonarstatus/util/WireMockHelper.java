@@ -58,7 +58,7 @@ public class WireMockHelper {
 		return allServeEvents;
 	}
 
-	public void setupDefaultStubsForSonar() {
+	public void setupExternalStatusCheckStubsForSonar() {
 		setupGetMr();
 		setupGetExternalStatusChecks();
 		setupSetStatusOfExternalStatusCheck();
@@ -96,6 +96,42 @@ public class WireMockHelper {
 						.willReturn(aResponse()
 								.withHeader("Content-Type", "application/json")
 								.withBody(MockUtil.get(JsonStub.GITLAB_GET_EXTERNAL_STATUS_CHECKS))));
+	}
+
+	public void setupApproveMr() {
+		wireMockServer.stubFor(
+				post(urlPathEqualTo(GITLAB_API_PREFIX + "/projects/" + MockUtil.GITLAB_PROJECT_ID + "/merge_requests/" + MockUtil.GITLAB_MERGE_REQUEST_IID + "/approve"))
+						.withHeader(API_AUTH_KEY_NAME, WireMock.equalTo(gitLabApiToken))
+						.willReturn(aResponse()
+								.withHeader("Content-Type", "application/json")
+								.withBody(MockUtil.get(JsonStub.GITLAB_APPROVE_MERGE_REQUEST))));
+	}
+
+	public void setupUnapproveMr() {
+		wireMockServer.stubFor(
+				post(urlPathEqualTo(GITLAB_API_PREFIX + "/projects/" + MockUtil.GITLAB_PROJECT_ID + "/merge_requests/" + MockUtil.GITLAB_MERGE_REQUEST_IID + "/unapprove"))
+						.withHeader(API_AUTH_KEY_NAME, WireMock.equalTo(gitLabApiToken))
+						.willReturn(aResponse()
+								.withHeader("Content-Type", "application/json")
+								.withBody(MockUtil.get(JsonStub.GITLAB_UNAPPROVE_MERGE_REQUEST))));
+	}
+
+	public void setupGetMrApprovals() {
+		wireMockServer.stubFor(
+				get(urlPathEqualTo(GITLAB_API_PREFIX + "/projects/" + MockUtil.GITLAB_PROJECT_ID + "/merge_requests/" + MockUtil.GITLAB_MERGE_REQUEST_IID + "/approvals"))
+						.withHeader(API_AUTH_KEY_NAME, WireMock.equalTo(gitLabApiToken))
+						.willReturn(aResponse()
+								.withHeader("Content-Type", "application/json")
+								.withBody(MockUtil.get(JsonStub.GITLAB_GET_MERGE_REQUEST_APPROVALS_NOT_APPROVED))));
+	}
+
+	public void setupGetMrApprovalsAlreadyApproved() {
+		wireMockServer.stubFor(
+				get(urlPathEqualTo(GITLAB_API_PREFIX + "/projects/" + MockUtil.GITLAB_PROJECT_ID + "/merge_requests/" + MockUtil.GITLAB_MERGE_REQUEST_IID + "/approvals"))
+						.withHeader(API_AUTH_KEY_NAME, WireMock.equalTo(gitLabApiToken))
+						.willReturn(aResponse()
+								.withHeader("Content-Type", "application/json")
+								.withBody(MockUtil.get(JsonStub.GITLAB_GET_MERGE_REQUEST_APPROVALS_APPROVED))));
 	}
 
 	public void setupGetExternalStatusChecksEmpty() {
