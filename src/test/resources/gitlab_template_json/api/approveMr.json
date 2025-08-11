@@ -13,7 +13,7 @@
   "approved_by": [
     {
       "user": {
-        "name": "u-sonar-status",
+        "name": "Sonarqube",
         "username": "u-sonar-status",
         "id": 1,
         "state": "active",

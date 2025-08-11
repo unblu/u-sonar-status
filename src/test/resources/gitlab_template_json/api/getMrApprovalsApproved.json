@@ -17,7 +17,7 @@
       "user": {
         "id": 40,
         "username": "test",
-        "name": "u-sonar-status",
+        "name": "Sonarqube",
         "state": "active",
         "locked": false,
         "avatar_url": "http://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80&d=identicon",
