@@ -166,25 +166,25 @@ class JsonUtilsTest {
 		c1.setMetric("new_reliability_rating");
 		c1.setOperator("GREATER_THAN");
 		c1.setValue("1");
-		c1.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS);
+		c1.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS_OK);
 		c1.setErrorThreshold("1");
 		Condition c2 = new Condition();
 		c2.setMetric("new_security_rating");
 		c2.setOperator("GREATER_THAN");
 		c2.setValue("1");
-		c2.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS);
+		c2.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS_OK);
 		c2.setErrorThreshold("1");
 		Condition c3 = new Condition();
 		c3.setMetric("new_maintainability_rating");
 		c3.setOperator("GREATER_THAN");
 		c3.setValue("1");
-		c3.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS);
+		c3.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS_OK);
 		c3.setErrorThreshold("1");
 		Condition c4 = new Condition();
 		c4.setMetric("new_duplicated_lines_density");
 		c4.setOperator("GREATER_THAN");
 		c4.setValue("0.0");
-		c4.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS);
+		c4.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS_OK);
 		c4.setErrorThreshold("3");
 		Condition c5 = new Condition();
 		c5.setMetric("new_security_hotspots_reviewed");
@@ -195,12 +195,12 @@ class JsonUtilsTest {
 		c6.setMetric("new_security_review_rating");
 		c6.setOperator("GREATER_THAN");
 		c6.setValue("1");
-		c6.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS);
+		c6.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS_OK);
 		c6.setErrorThreshold("1");
 
 		QualityGate qualityGate = new QualityGate();
 		qualityGate.setName("Test Gate");
-		qualityGate.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS);
+		qualityGate.setStatus(MockUtil.SONAR_QUALITY_GATE_STATUS_OK);
 		qualityGate.setConditions(List.of(c1, c2, c3, c4, c5, c6));
 
 		SonarEvent event = new SonarEvent();

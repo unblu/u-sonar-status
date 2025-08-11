@@ -57,7 +57,7 @@ class USonarStatusNoSecretTest {
 
 	@Test
 	void testSonarEndpointBlockingNoSecret() throws Exception {
-		wireMockHelper.setupDefaultStubsForSonar();
+		wireMockHelper.setupExternalStatusCheckStubsForSonar();
 
 		String body = MockUtil.get(JsonStub.SONAR_EVENT);
 		given().when()
