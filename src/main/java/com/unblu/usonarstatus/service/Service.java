@@ -67,7 +67,7 @@ public class Service {
 	@ConfigProperty(name = "report.mode.approval", defaultValue = "true")
 	boolean reportModeApproval;
 
-	@ConfigProperty(name = "report.mode.approver.name", defaultValue = "Sonarqube")
+	@ConfigProperty(name = "report.mode.approver.name", defaultValue = "u-sonar-status")
 	String reportModeApproverName;
 
 	@Inject
