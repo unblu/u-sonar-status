@@ -1,12 +1,12 @@
 plugins {
     id 'java'
     id 'io.quarkus'
-    id 'org.ajoberstar.grgit' version '5.0.0'
-    id 'com.diffplug.spotless' version '6.9.0'
+    id 'org.ajoberstar.grgit' version '5.3.3'
+    id 'com.diffplug.spotless' version '8.11.0'
 }
 
 wrapper {
-    gradleVersion = '8.10.1'
+    gradleVersion = '9.7.0'
 }
 
 repositories {
@@ -17,24 +17,24 @@ dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-info'
     implementation 'io.quarkus:quarkus-reactive-routes'
-    implementation 'io.quarkus:quarkus-rest-client-reactive-jackson'
+    implementation 'io.quarkus:quarkus-rest-client-jackson'
     implementation 'io.quarkus:quarkus-smallrye-health'
     implementation 'io.quarkus:quarkus-container-image-jib'
     implementation 'io.quarkus:quarkus-arc'
-    implementation 'eu.mulk.quarkus-googlecloud-jsonlogging:quarkus-googlecloud-jsonlogging:6.0.0'
-    implementation 'org.gitlab4j:gitlab4j-api:6.0.0-rc.8'
+    implementation 'eu.mulk.quarkus-googlecloud-jsonlogging:quarkus-googlecloud-jsonlogging:8.0.0'
+    implementation 'org.gitlab4j:gitlab4j-api:6.3.0'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.33.2'
 }
 
-group 'com.unblu.usonarstatus'
-version 'rev_' + grgit.head().abbreviatedId
+group = 'com.unblu.usonarstatus'
+version = 'rev_' + grgit.head().abbreviatedId
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 compileJava {
@@ -56,6 +56,6 @@ spotless {
     removeUnusedImports()
 
     // available versions are: https://github.com/diffplug/spotless/tree/master/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_jdt_formatter
-    eclipse('4.21.0').configFile('.settings/org.eclipse.jdt.core.prefs')
+    eclipse('4.21').configFile('.settings/org.eclipse.jdt.core.prefs')
   }
 }
